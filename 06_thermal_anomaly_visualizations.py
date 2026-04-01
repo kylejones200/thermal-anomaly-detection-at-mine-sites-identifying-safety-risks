@@ -22,13 +22,6 @@ import os
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from plot_style import set_tufte_defaults, apply_tufte_style, save_tufte_figure, COLORS
 
-# Import Tufte plotting utilities
-import sys
-from pathlib import Path
-sys.path.insert(0, str(Path(__file__).parent.parent))
-from tda_utils import setup_tufte_plot, TufteColors
-
-
 def save_fig(filename):
     """Save plot in the standard minimalist format."""
     plt.tight_layout()
@@ -144,6 +137,8 @@ def create_main_visualization():
     ax1.spines["right"].set_visible(False)
     ax1.spines["left"].set_position(("outward", 5))
     ax1.spines["bottom"].set_position(("outward", 5))
+    ax1.grid(False)
+    
     ax1.set_title('Thermal Anomaly Detection at Mine Tailings Dam', 
                   fontsize=12, fontweight="bold", loc="left")
     ax1.set_xlabel('Date', fontsize=10)
@@ -163,6 +158,8 @@ def create_main_visualization():
     ax2.spines["right"].set_visible(False)
     ax2.spines["left"].set_position(("outward", 5))
     ax2.spines["bottom"].set_position(("outward", 5))
+    ax2.grid(False)
+    
     ax2.set_title('Anomaly Severity Score', fontsize=12, fontweight="bold", loc="left")
     ax2.set_xlabel('Date', fontsize=10)
     ax2.set_ylabel('Anomaly Score (0-100)', fontsize=10)
@@ -217,6 +214,8 @@ def create_trend_visualization():
     ax1.spines["right"].set_visible(False)
     ax1.spines["left"].set_position(("outward", 5))
     ax1.spines["bottom"].set_position(("outward", 5))
+    ax1.grid(False)
+    
     ax1.set_title('Thermal Trend Analysis: Tailings Dam', 
                   fontsize=12, fontweight="bold", loc="left")
     ax1.set_xlabel('Date', fontsize=10)
@@ -237,6 +236,8 @@ def create_trend_visualization():
     ax2.spines["right"].set_visible(False)
     ax2.spines["left"].set_position(("outward", 5))
     ax2.spines["bottom"].set_position(("outward", 5))
+    ax2.grid(False)
+    
     ax2.set_title('Temperature Deviation from Baseline', 
                   fontsize=12, fontweight="bold", loc="left")
     ax2.set_xlabel('Date', fontsize=10)

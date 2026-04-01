@@ -12,13 +12,6 @@ from datetime import datetime, timedelta
 import time
 import csv
 
-# Import Tufte plotting utilities
-import sys
-from pathlib import Path
-sys.path.insert(0, str(Path(__file__).parent.parent))
-from tda_utils import setup_tufte_plot, TufteColors
-
-
 def fetch_modis_lst_data(latitude, longitude, start_date, end_date):
     """Generate realistic MODIS LST data matching satellite characteristics."""
     dates = pd.date_range(start=start_date, end=end_date, freq='8D')
