@@ -1,6 +1,12 @@
 import sys
 import os
 
+import logging
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(levelname)s - %(message)s'
+)
+logger = logging.getLogger(__name__)
 # Add parent directory to path to import plot_style
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from plot_style import set_tufte_defaults, apply_tufte_style, save_tufte_figure, COLORS
@@ -76,7 +82,7 @@ def create_main_thermal_time_series():
     """
     Create time series plot showing thermal anomalies across mine sites.
     """
-    print("Generating main thermal time series visualization...")
+    logger.info("Generating main thermal time series visualization...")
     
     dates, baseline, normal, tailings, waste = generate_mine_thermal_data()
     
@@ -159,14 +165,14 @@ def create_main_thermal_time_series():
                 dpi=300, bbox_inches='tight')
     plt.close()
     
-    print(f"✓ Main thermal time series visualization saved")
-    print(f"  Anomalies detected: {len(anomaly_dates)}")
+    logger.info(f"✓ Main thermal time series visualization saved")
+    logger.info(f"  Anomalies detected: {len(anomaly_dates)}")
 
 def create_spatial_thermal_heatmap():
     """
     Create spatial heatmap showing thermal patterns across mine site.
     """
-    print("Generating spatial thermal heatmap visualization...")
+    logger.info("Generating spatial thermal heatmap visualization...")
     
     np.random.seed(42)
     
@@ -261,27 +267,27 @@ def create_spatial_thermal_heatmap():
                 dpi=300, bbox_inches='tight')
     plt.close()
     
-    print("✓ Spatial thermal heatmap visualization saved")
+    logger.info("✓ Spatial thermal heatmap visualization saved")
 
 def main():
     """Generate all visualizations for Blog 16."""
     set_tufte_defaults()
-    print("="*70)
-    print("Blog 16: Mine Thermal Anomaly (MODIS) - Visualizations")
-    print("="*70)
-    print()
+    logger.info("="*70)
+    logger.info("Blog 16: Mine Thermal Anomaly (MODIS) - Visualizations")
+    logger.info("="*70)
+    logger.info()
     
     create_main_thermal_time_series()
     create_spatial_thermal_heatmap()
     
-    print()
-    print("="*70)
-    print("All visualizations generated successfully!")
-    print("="*70)
-    print()
-    print("Files created:")
-    print("  - 16_thermal_anomaly_modis_main.png")
-    print("  - 16_thermal_anomaly_spatial.png")
+    logger.info()
+    logger.info("="*70)
+    logger.info("All visualizations generated successfully!")
+    logger.info("="*70)
+    logger.info()
+    logger.info("Files created:")
+    logger.info("  - 16_thermal_anomaly_modis_main.png")
+    logger.info("  - 16_thermal_anomaly_spatial.png")
 
 if __name__ == "__main__":
     main()

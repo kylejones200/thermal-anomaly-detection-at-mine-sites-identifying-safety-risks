@@ -2,6 +2,12 @@
 """
 Thermal Anomaly Detection for Mine Sites - Production Implementation
 
+import logging
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(levelname)s - %(message)s'
+)
+logger = logging.getLogger(__name__)
 Clean, executable implementation of thermal anomaly detection using MODIS LST data.
 Includes baseline calculation, anomaly detection, and risk assessment.
 """
@@ -180,28 +186,28 @@ def export_to_csv(data, filename):
 
 def main():
     """Execute thermal anomaly detection analysis."""
-    print("=" * 70)
-    print("THERMAL ANOMALY DETECTION - PRODUCTION RUN")
-    print("=" * 70)
+    logger.info("=" * 70)
+    logger.info("THERMAL ANOMALY DETECTION - PRODUCTION RUN")
+    logger.info("=" * 70)
     
     start_time = time.time()
     
-    print("\n1. Fetching MODIS LST Data...")
+    logger.info("\n1. Fetching MODIS LST Data...")
     mine_lat, mine_lon = -30.5, 121.5
     thermal_data = fetch_modis_lst_data(mine_lat, mine_lon, '2022-01-01', '2024-01-01')
     thermal_data['lst_day_celsius'] = kelvin_to_celsius(thermal_data['lst_day_kelvin'])
     thermal_data['lst_night_celsius'] = kelvin_to_celsius(thermal_data['lst_night_kelvin'])
     
-    print(f"   Collected {len(thermal_data)} observations")
-    print(f"   Temperature range: {thermal_data['lst_day_celsius'].min():.1f}°C to {thermal_data['lst_day_celsius'].max():.1f}°C")
+    logger.info(f"   Collected {len(thermal_data)} observations")
+    logger.info(f"   Temperature range: {thermal_data['lst_day_celsius'].min():.1f}°C to {thermal_data['lst_day_celsius'].max():.1f}°C")
     
-    print("\n2. Calculating Thermal Baseline...")
+    logger.info("\n2. Calculating Thermal Baseline...")
     baseline = calculate_thermal_baseline(thermal_data)
-    print(f"   Day Mean: {baseline['overall']['day_mean']:.2f}°C")
-    print(f"   Day Std Dev: {baseline['overall']['day_std']:.2f}°C")
-    print(f"   Day 95th Percentile: {baseline['overall']['day_p95']:.2f}°C")
+    logger.info(f"   Day Mean: {baseline['overall']['day_mean']:.2f}°C")
+    logger.info(f"   Day Std Dev: {baseline['overall']['day_std']:.2f}°C")
+    logger.info(f"   Day 95th Percentile: {baseline['overall']['day_p95']:.2f}°C")
     
-    print("\n3. Detecting Thermal Anomalies...")
+    logger.info("\n3. Detecting Thermal Anomalies...")
     thermal_with_anomaly = thermal_data.copy()
     recent_dates = thermal_with_anomaly['date'] > (thermal_with_anomaly['date'].max() - timedelta(days=90))
     thermal_with_anomaly.loc[recent_dates, 'lst_day_celsius'] += 8
@@ -210,10 +216,10 @@ def main():
     anomaly_count = anomalies['any_anomaly'].sum()
     anomaly_pct = (anomaly_count / len(anomalies)) * 100
     
-    print(f"   Anomalies Detected: {anomaly_count} ({anomaly_pct:.1f}%)")
-    print(f"   Maximum Severity Score: {anomalies['anomaly_score'].max():.1f}/100")
+    logger.info(f"   Anomalies Detected: {anomaly_count} ({anomaly_pct:.1f}%)")
+    logger.info(f"   Maximum Severity Score: {anomalies['anomaly_score'].max():.1f}/100")
     
-    print("\n4. Analyzing Multiple Mine Features...")
+    logger.info("\n4. Analyzing Multiple Mine Features...")
     mine_features = [
         {'name': 'Main Tailings Dam', 'type': 'tailings_dam', 'lat': -30.50, 'lon': 121.50},
         {'name': 'North Waste Dump', 'type': 'waste_dump', 'lat': -30.48, 'lon': 121.52},
@@ -226,11 +232,11 @@ def main():
     high_risk_count = (site_analysis['risk_level'] == 'HIGH').sum()
     medium_risk_count = (site_analysis['risk_level'] == 'MEDIUM').sum()
     
-    print(f"   Features Analyzed: {len(site_analysis)}")
-    print(f"   High Risk Features: {high_risk_count}")
-    print(f"   Medium Risk Features: {medium_risk_count}")
+    logger.info(f"   Features Analyzed: {len(site_analysis)}")
+    logger.info(f"   High Risk Features: {high_risk_count}")
+    logger.info(f"   Medium Risk Features: {medium_risk_count}")
     
-    print("\n5. Analyzing Thermal Trends...")
+    logger.info("\n5. Analyzing Thermal Trends...")
     tailings_thermal = fetch_modis_lst_data(-30.50, 121.50, '2022-01-01', '2024-01-01')
     tailings_thermal['lst_day_celsius'] = kelvin_to_celsius(tailings_thermal['lst_day_kelvin'])
     recent_mask = tailings_thermal['date'] > '2023-06-01'
@@ -240,28 +246,28 @@ def main():
     baseline_tailings = calculate_thermal_baseline(tailings_thermal)
     trend_analysis = analyze_thermal_trends(tailings_thermal, baseline_tailings)
     
-    print(f"   Trend Status: {trend_analysis['trend_status']}")
-    print(f"   Urgency Level: {trend_analysis['urgency']}")
-    print(f"   Annual Trend: {trend_analysis['annual_trend_celsius']:+.2f}°C/year")
+    logger.info(f"   Trend Status: {trend_analysis['trend_status']}")
+    logger.info(f"   Urgency Level: {trend_analysis['urgency']}")
+    logger.info(f"   Annual Trend: {trend_analysis['annual_trend_celsius']:+.2f}°C/year")
     
-    print("\n6. Exporting Results...")
+    logger.info("\n6. Exporting Results...")
     export_to_csv(thermal_data, 'thermal_baseline_data.csv')
     export_to_csv(anomalies, 'thermal_anomalies.csv')
     export_to_csv(site_analysis, 'mine_site_thermal_analysis.csv')
-    print("   Exported: thermal_baseline_data.csv")
-    print("   Exported: thermal_anomalies.csv")
-    print("   Exported: mine_site_thermal_analysis.csv")
+    logger.info("   Exported: thermal_baseline_data.csv")
+    logger.info("   Exported: thermal_anomalies.csv")
+    logger.info("   Exported: mine_site_thermal_analysis.csv")
     
     execution_time = time.time() - start_time
     
-    print("\n" + "=" * 70)
-    print("PERFORMANCE METRICS")
-    print("=" * 70)
-    print(f"Total Execution Time: {execution_time:.3f} seconds")
-    print(f"Observations Processed: {len(thermal_data) * len(mine_features)}")
-    print(f"Anomaly Detection Rate: {anomaly_pct:.2f}%")
-    print(f"Features at High Risk: {high_risk_count}/{len(mine_features)}")
-    print("=" * 70)
+    logger.info("\n" + "=" * 70)
+    logger.info("PERFORMANCE METRICS")
+    logger.info("=" * 70)
+    logger.info(f"Total Execution Time: {execution_time:.3f} seconds")
+    logger.info(f"Observations Processed: {len(thermal_data) * len(mine_features)}")
+    logger.info(f"Anomaly Detection Rate: {anomaly_pct:.2f}%")
+    logger.info(f"Features at High Risk: {high_risk_count}/{len(mine_features)}")
+    logger.info("=" * 70)
 
 if __name__ == "__main__":
     main()
