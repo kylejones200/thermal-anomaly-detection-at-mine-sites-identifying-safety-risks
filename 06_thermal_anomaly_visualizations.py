@@ -107,7 +107,7 @@ def detect_thermal_anomalies(thermal_data, baseline, threshold_sigma=2.5):
     
     return result
 
-def create_main_visualization():
+def create_main_visualization(plot: bool = False):
     """Create main thermal anomaly detection visualization."""
     # Set random seed for reproducibility
     np.random.seed(42)
@@ -129,57 +129,58 @@ def create_main_visualization():
     anomalies = detect_thermal_anomalies(thermal_with_anomaly, baseline)
     
     # Create figure
-    fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(10, 8))
+    if plot:
+        fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(10, 8))
     
     # Top panel: Temperature time series with baseline
-    ax1.plot(thermal_data['date'], thermal_data['lst_day_celsius'], 
-             color='black', linewidth=1, label='Historical Temperature')
-    ax1.axhline(y=baseline['overall']['day_mean'], color='gray', 
-                linestyle='--', linewidth=0.8, label='Baseline Mean')
-    ax1.axhline(y=baseline['overall']['day_p95'], color='gray', 
-                linestyle=':', linewidth=0.8, label='95th Percentile')
+        ax1.plot(thermal_data['date'], thermal_data['lst_day_celsius'], 
+                 color='black', linewidth=1, label='Historical Temperature')
+        ax1.axhline(y=baseline['overall']['day_mean'], color='gray', 
+                    linestyle='--', linewidth=0.8, label='Baseline Mean')
+        ax1.axhline(y=baseline['overall']['day_p95'], color='gray', 
+                    linestyle=':', linewidth=0.8, label='95th Percentile')
     
     # Highlight anomaly period
-    anomaly_period = anomalies[anomalies['any_anomaly']]
-    ax1.scatter(anomaly_period['date'], anomaly_period['lst_day_celsius'], 
-                color='black', s=50, marker='o', facecolors='white', 
-                edgecolors='black', linewidths=1.5, label='Detected Anomalies', zorder=5)
+        anomaly_period = anomalies[anomalies['any_anomaly']]
+        ax1.scatter(anomaly_period['date'], anomaly_period['lst_day_celsius'], 
+                    color='black', s=50, marker='o', facecolors='white', 
+                    edgecolors='black', linewidths=1.5, label='Detected Anomalies', zorder=5)
     
     # Apply minimalist style manually to avoid duplicate titles
-    ax1.spines["top"].set_visible(False)
-    ax1.spines["right"].set_visible(False)
-    ax1.spines["left"].set_position(("outward", 5))
-    ax1.spines["bottom"].set_position(("outward", 5))
-    ax1.set_title('Thermal Anomaly Detection at Mine Tailings Dam', 
-                  fontsize=12, fontweight="bold", loc="left")
-    ax1.set_xlabel('Date', fontsize=10)
-    ax1.set_ylabel('Land Surface Temperature (°C)', fontsize=10)
-    ax1.legend(loc='upper left', frameon=False, fontsize=9)
+        ax1.spines["top"].set_visible(False)
+        ax1.spines["right"].set_visible(False)
+        ax1.spines["left"].set_position(("outward", 5))
+        ax1.spines["bottom"].set_position(("outward", 5))
+        ax1.set_title('Thermal Anomaly Detection at Mine Tailings Dam', 
+                      fontsize=12, fontweight="bold", loc="left")
+        ax1.set_xlabel('Date', fontsize=10)
+        ax1.set_ylabel('Land Surface Temperature (°C)', fontsize=10)
+        ax1.legend(loc='upper left', frameon=False, fontsize=9)
     
     # Bottom panel: Anomaly score over time
-    ax2.fill_between(anomalies['date'], 0, anomalies['anomaly_score'], 
-                     color='gray', alpha=0.3)
-    ax2.plot(anomalies['date'], anomalies['anomaly_score'], 
-             color='black', linewidth=1)
-    ax2.axhline(y=40, color='gray', linestyle='--', linewidth=0.8, label='Medium Risk')
-    ax2.axhline(y=60, color='gray', linestyle='-.', linewidth=0.8, label='High Risk')
+        ax2.fill_between(anomalies['date'], 0, anomalies['anomaly_score'], 
+                         color='gray', alpha=0.3)
+        ax2.plot(anomalies['date'], anomalies['anomaly_score'], 
+                 color='black', linewidth=1)
+        ax2.axhline(y=40, color='gray', linestyle='--', linewidth=0.8, label='Medium Risk')
+        ax2.axhline(y=60, color='gray', linestyle='-.', linewidth=0.8, label='High Risk')
     
     # Apply minimalist style manually to avoid duplicate titles
-    ax2.spines["top"].set_visible(False)
-    ax2.spines["right"].set_visible(False)
-    ax2.spines["left"].set_position(("outward", 5))
-    ax2.spines["bottom"].set_position(("outward", 5))
-    ax2.set_title('Anomaly Severity Score', fontsize=12, fontweight="bold", loc="left")
-    ax2.set_xlabel('Date', fontsize=10)
-    ax2.set_ylabel('Anomaly Score (0-100)', fontsize=10)
-    ax2.legend(loc='upper left', frameon=False, fontsize=9)
-    ax2.set_ylim(0, 105)
+        ax2.spines["top"].set_visible(False)
+        ax2.spines["right"].set_visible(False)
+        ax2.spines["left"].set_position(("outward", 5))
+        ax2.spines["bottom"].set_position(("outward", 5))
+        ax2.set_title('Anomaly Severity Score', fontsize=12, fontweight="bold", loc="left")
+        ax2.set_xlabel('Date', fontsize=10)
+        ax2.set_ylabel('Anomaly Score (0-100)', fontsize=10)
+        ax2.legend(loc='upper left', frameon=False, fontsize=9)
+        ax2.set_ylim(0, 105)
     
     # Save
-    save_fig('06_thermal_anomaly_main.png')
+        save_fig('06_thermal_anomaly_main.png')
     logger.info("✓ Created: 06_thermal_anomaly_main.png")
 
-def create_trend_visualization():
+def create_trend_visualization(plot: bool = False):
     """Create thermal trend analysis visualization."""
     # Set random seed for reproducibility
     np.random.seed(42)
@@ -203,53 +204,54 @@ def create_trend_visualization():
     baseline_mean = baseline_data['lst_day_celsius'].mean()
     
     # Create figure
-    fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(10, 8))
+    if plot:
+        fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(10, 8))
     
     # Top panel: Temperature with trend
-    ax1.plot(thermal_sorted['date'], thermal_sorted['lst_day_celsius'], 
-             color='lightgray', linewidth=0.8, label='Raw Temperature')
-    ax1.plot(thermal_sorted['date'], thermal_sorted['rolling_mean'], 
-             color='black', linewidth=1.5, label='6-Period Moving Average')
-    ax1.axhline(y=baseline_mean, color='gray', linestyle='--', 
-                linewidth=0.8, label='Historical Baseline')
+        ax1.plot(thermal_sorted['date'], thermal_sorted['lst_day_celsius'], 
+                 color='lightgray', linewidth=0.8, label='Raw Temperature')
+        ax1.plot(thermal_sorted['date'], thermal_sorted['rolling_mean'], 
+                 color='black', linewidth=1.5, label='6-Period Moving Average')
+        ax1.axhline(y=baseline_mean, color='gray', linestyle='--', 
+                    linewidth=0.8, label='Historical Baseline')
     
     # Highlight warming period
-    warming_period = thermal_sorted[thermal_sorted['date'] > '2023-06-01']
-    ax1.axvspan(warming_period['date'].min(), warming_period['date'].max(), 
-                alpha=0.1, color='gray', label='Warming Period')
+        warming_period = thermal_sorted[thermal_sorted['date'] > '2023-06-01']
+        ax1.axvspan(warming_period['date'].min(), warming_period['date'].max(), 
+                    alpha=0.1, color='gray', label='Warming Period')
     
     # Apply minimalist style manually to avoid duplicate titles
-    ax1.spines["top"].set_visible(False)
-    ax1.spines["right"].set_visible(False)
-    ax1.spines["left"].set_position(("outward", 5))
-    ax1.spines["bottom"].set_position(("outward", 5))
-    ax1.set_title('Thermal Trend Analysis: Tailings Dam', 
-                  fontsize=12, fontweight="bold", loc="left")
-    ax1.set_xlabel('Date', fontsize=10)
-    ax1.set_ylabel('Land Surface Temperature (°C)', fontsize=10)
-    ax1.legend(loc='upper left', frameon=False, fontsize=9)
+        ax1.spines["top"].set_visible(False)
+        ax1.spines["right"].set_visible(False)
+        ax1.spines["left"].set_position(("outward", 5))
+        ax1.spines["bottom"].set_position(("outward", 5))
+        ax1.set_title('Thermal Trend Analysis: Tailings Dam', 
+                      fontsize=12, fontweight="bold", loc="left")
+        ax1.set_xlabel('Date', fontsize=10)
+        ax1.set_ylabel('Land Surface Temperature (°C)', fontsize=10)
+        ax1.legend(loc='upper left', frameon=False, fontsize=9)
     
     # Bottom panel: Deviation from baseline
-    thermal_sorted['deviation'] = thermal_sorted['lst_day_celsius'] - baseline_mean
+        thermal_sorted['deviation'] = thermal_sorted['lst_day_celsius'] - baseline_mean
     
     # Bar chart showing positive and negative deviations
-    colors = ['black' if x >= 0 else 'gray' for x in thermal_sorted['deviation']]
-    ax2.bar(thermal_sorted['date'], thermal_sorted['deviation'], 
-            color=colors, width=6, alpha=0.6)
-    ax2.axhline(y=0, color='black', linewidth=0.8)
+        colors = ['black' if x >= 0 else 'gray' for x in thermal_sorted['deviation']]
+        ax2.bar(thermal_sorted['date'], thermal_sorted['deviation'], 
+                color=colors, width=6, alpha=0.6)
+        ax2.axhline(y=0, color='black', linewidth=0.8)
     
     # Apply minimalist style manually to avoid duplicate titles
-    ax2.spines["top"].set_visible(False)
-    ax2.spines["right"].set_visible(False)
-    ax2.spines["left"].set_position(("outward", 5))
-    ax2.spines["bottom"].set_position(("outward", 5))
-    ax2.set_title('Temperature Deviation from Baseline', 
-                  fontsize=12, fontweight="bold", loc="left")
-    ax2.set_xlabel('Date', fontsize=10)
-    ax2.set_ylabel('Temperature Deviation (°C)', fontsize=10)
+        ax2.spines["top"].set_visible(False)
+        ax2.spines["right"].set_visible(False)
+        ax2.spines["left"].set_position(("outward", 5))
+        ax2.spines["bottom"].set_position(("outward", 5))
+        ax2.set_title('Temperature Deviation from Baseline', 
+                      fontsize=12, fontweight="bold", loc="left")
+        ax2.set_xlabel('Date', fontsize=10)
+        ax2.set_ylabel('Temperature Deviation (°C)', fontsize=10)
     
     # Save
-    save_fig('06_thermal_anomaly_accuracy.png')
+        save_fig('06_thermal_anomaly_accuracy.png')
     logger.info("✓ Created: 06_thermal_anomaly_accuracy.png")
 
 def main():

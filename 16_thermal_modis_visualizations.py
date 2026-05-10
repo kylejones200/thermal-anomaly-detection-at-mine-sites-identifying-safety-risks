@@ -78,7 +78,7 @@ def generate_mine_thermal_data():
     
     return dates, baseline, normal_site, tailings_site, waste_site
 
-def create_main_thermal_time_series():
+def create_main_thermal_time_series(plot: bool = False):
     """
     Create time series plot showing thermal anomalies across mine sites.
     """
@@ -97,78 +97,79 @@ def create_main_thermal_time_series():
     anomalies = np.abs(z_scores) > 3
     
     # Create figure
-    fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(14, 10), sharex=True)
+    if plot:
+        fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(14, 10), sharex=True)
     
     # Top panel: Temperature time series
-    ax1.plot(dates, baseline_c, '--', color='black', linewidth=2, 
-            label='Seasonal Baseline', alpha=0.7)
+        ax1.plot(dates, baseline_c, '--', color='black', linewidth=2, 
+                label='Seasonal Baseline', alpha=0.7)
     
-    ax1.plot(dates, normal_c, '-', color='black', linewidth=1.5, 
-            label='Normal Mine Site', alpha=0.8)
+        ax1.plot(dates, normal_c, '-', color='black', linewidth=1.5, 
+                label='Normal Mine Site', alpha=0.8)
     
-    ax1.plot(dates, waste_c, '-', color='black', linewidth=1.5,
-            label='Waste Dump (Oxidation)', alpha=0.8)
+        ax1.plot(dates, waste_c, '-', color='black', linewidth=1.5,
+                label='Waste Dump (Oxidation)', alpha=0.8)
     
-    ax1.plot(dates, tailings_c, '-', color='black', linewidth=1.5,
-            label='Tailings Dam', alpha=0.8)
+        ax1.plot(dates, tailings_c, '-', color='black', linewidth=1.5,
+                label='Tailings Dam', alpha=0.8)
     
     # Highlight anomalies
-    anomaly_dates = [d for d, a in zip(dates, anomalies) if a]
-    anomaly_temps = [t for t, a in zip(tailings_c, anomalies) if a]
+        anomaly_dates = [d for d, a in zip(dates, anomalies) if a]
+        anomaly_temps = [t for t, a in zip(tailings_c, anomalies) if a]
     
-    ax1.scatter(anomaly_dates, anomaly_temps, s=100, 
-               facecolors='none', edgecolors='#FF4136', linewidths=2,
-               label=f'Thermal Anomalies (n={len(anomaly_dates)})', zorder=5)
+        ax1.scatter(anomaly_dates, anomaly_temps, s=100, 
+                   facecolors='none', edgecolors='#FF4136', linewidths=2,
+                   label=f'Thermal Anomalies (n={len(anomaly_dates)})', zorder=5)
     
-    apply_minimalist_style_manual(ax1)
-    ax1.set_ylabel('Temperature (°C)', fontsize=11)
-    ax1.set_title('Mine-Site Thermal Monitoring with MODIS LST', 
-                 fontsize=13, fontweight='bold', loc='left', pad=20)
-    ax1.legend(loc='upper left', frameon=False, fontsize=9, ncol=2)
+        apply_minimalist_style_manual(ax1)
+        ax1.set_ylabel('Temperature (°C)', fontsize=11)
+        ax1.set_title('Mine-Site Thermal Monitoring with MODIS LST', 
+                     fontsize=13, fontweight='bold', loc='left', pad=20)
+        ax1.legend(loc='upper left', frameon=False, fontsize=9, ncol=2)
     
     # Add annotation for spontaneous combustion event
-    event_idx = 128
-    ax1.annotate('Spontaneous Combustion Event', 
-                xy=(dates[event_idx], tailings_c[event_idx]), 
-                xytext=(dates[event_idx + 50], tailings_c[event_idx] + 8),
-                arrowprops=dict(arrowstyle='->', color='black', lw=1.5),
-                fontsize=9, bbox=dict(boxstyle='round', facecolor='white', 
-                                     edgecolor='black', linewidth=1))
+        event_idx = 128
+        ax1.annotate('Spontaneous Combustion Event', 
+                    xy=(dates[event_idx], tailings_c[event_idx]), 
+                    xytext=(dates[event_idx + 50], tailings_c[event_idx] + 8),
+                    arrowprops=dict(arrowstyle='->', color='black', lw=1.5),
+                    fontsize=9, bbox=dict(boxstyle='round', facecolor='white', 
+                                         edgecolor='black', linewidth=1))
     
     # Bottom panel: Z-score anomaly detection
-    ax2.plot(dates, z_scores, 'o-', color='black', linewidth=1, 
-            markersize=2, markerfacecolor='white', markeredgecolor='black',
-            label='Z-Score (Tailings Dam)')
+        ax2.plot(dates, z_scores, 'o-', color='black', linewidth=1, 
+                markersize=2, markerfacecolor='white', markeredgecolor='black',
+                label='Z-Score (Tailings Dam)')
     
     # Threshold lines
-    ax2.axhline(y=3, color='black', linestyle='--', linewidth=2, label='Anomaly Threshold (±3σ)')
-    ax2.axhline(y=-3, color='black', linestyle='--', linewidth=2)
-    ax2.axhline(y=0, color='black', linestyle=':', linewidth=1, alpha=0.5)
+        ax2.axhline(y=3, color='black', linestyle='--', linewidth=2, label='Anomaly Threshold (±3σ)')
+        ax2.axhline(y=-3, color='black', linestyle='--', linewidth=2)
+        ax2.axhline(y=0, color='black', linestyle=':', linewidth=1, alpha=0.5)
     
     # Shade anomaly regions
-    ax2.fill_between(dates, -10, 10, where=np.abs(z_scores) > 3, 
-                    color='black', alpha=0.2, label='Anomaly Regions')
+        ax2.fill_between(dates, -10, 10, where=np.abs(z_scores) > 3, 
+                        color='black', alpha=0.2, label='Anomaly Regions')
     
-    apply_minimalist_style_manual(ax2)
-    ax2.set_xlabel('Date', fontsize=11)
-    ax2.set_ylabel('Z-Score (σ)', fontsize=11)
-    ax2.set_title('Statistical Anomaly Detection', 
-                 fontsize=12, fontweight='bold', loc='left', pad=15)
-    ax2.legend(loc='upper left', frameon=False, fontsize=9)
-    ax2.set_ylim(-6, 8)
+        apply_minimalist_style_manual(ax2)
+        ax2.set_xlabel('Date', fontsize=11)
+        ax2.set_ylabel('Z-Score (σ)', fontsize=11)
+        ax2.set_title('Statistical Anomaly Detection', 
+                     fontsize=12, fontweight='bold', loc='left', pad=15)
+        ax2.legend(loc='upper left', frameon=False, fontsize=9)
+        ax2.set_ylim(-6, 8)
     
     # Format x-axis
-    ax2.tick_params(axis='x', rotation=45)
+        ax2.tick_params(axis='x', rotation=45)
     
-    plt.tight_layout()
-    plt.savefig('/Users/k.jones/Desktop/blogs/blog_posts/16_thermal_anomaly_modis_main.png', 
-                dpi=300, bbox_inches='tight')
-    plt.close()
+        plt.tight_layout()
+        plt.savefig('/Users/k.jones/Desktop/blogs/blog_posts/16_thermal_anomaly_modis_main.png', 
+                    dpi=300, bbox_inches='tight')
+        plt.close()
     
     logger.info(f"✓ Main thermal time series visualization saved")
     logger.info(f"  Anomalies detected: {len(anomaly_dates)}")
 
-def create_spatial_thermal_heatmap():
+def create_spatial_thermal_heatmap(plot: bool = False):
     """
     Create spatial heatmap showing thermal patterns across mine site.
     """
@@ -208,64 +209,65 @@ def create_spatial_thermal_heatmap():
     z_scores = (temp - np.mean(temp)) / np.std(temp)
     
     # Create figure with two panels
-    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(14, 6))
+    if plot:
+        fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(14, 6))
     
     # Left panel: Temperature heatmap
-    im1 = ax1.contourf(X, Y, temp, levels=20, cmap='hot')
+        im1 = ax1.contourf(X, Y, temp, levels=20, cmap='hot')
     
     # Add mine features
-    ax1.plot(tailings_x, tailings_y, 'c^', markersize=15, 
-            markeredgecolor='black', markeredgewidth=2, label='Tailings Dam')
-    ax1.plot(waste_x, waste_y, 'cs', markersize=15,
-            markeredgecolor='black', markeredgewidth=2, label='Waste Dump')
-    ax1.plot(plant_x, plant_y, 'co', markersize=15,
-            markeredgecolor='black', markeredgewidth=2, label='Processing Plant')
+        ax1.plot(tailings_x, tailings_y, 'c^', markersize=15, 
+                markeredgecolor='black', markeredgewidth=2, label='Tailings Dam')
+        ax1.plot(waste_x, waste_y, 'cs', markersize=15,
+                markeredgecolor='black', markeredgewidth=2, label='Waste Dump')
+        ax1.plot(plant_x, plant_y, 'co', markersize=15,
+                markeredgecolor='black', markeredgewidth=2, label='Processing Plant')
     
-    apply_minimalist_style_manual(ax1)
-    ax1.set_xlabel('Easting (km)', fontsize=10)
-    ax1.set_ylabel('Northing (km)', fontsize=10)
-    ax1.set_title('MODIS LST Temperature Map', 
-                  fontsize=12, fontweight='bold', loc='center', pad=15)
-    ax1.legend(loc='upper right', frameon=False, fontsize=8)
-    ax1.set_aspect('equal')
+        apply_minimalist_style_manual(ax1)
+        ax1.set_xlabel('Easting (km)', fontsize=10)
+        ax1.set_ylabel('Northing (km)', fontsize=10)
+        ax1.set_title('MODIS LST Temperature Map', 
+                      fontsize=12, fontweight='bold', loc='center', pad=15)
+        ax1.legend(loc='upper right', frameon=False, fontsize=8)
+        ax1.set_aspect('equal')
     
-    cbar1 = plt.colorbar(im1, ax=ax1)
-    cbar1.set_label('Temperature (°C)', fontsize=10)
-    cbar1.outline.set_visible(False)
+        cbar1 = plt.colorbar(im1, ax=ax1)
+        cbar1.set_label('Temperature (°C)', fontsize=10)
+        cbar1.outline.set_visible(False)
     
     # Right panel: Z-score anomaly map
-    im2 = ax2.contourf(X, Y, z_scores, levels=20, cmap='gray')
+        im2 = ax2.contourf(X, Y, z_scores, levels=20, cmap='gray')
     
     # Highlight high anomalies (>3σ)
-    ax2.contour(X, Y, z_scores, levels=[3], colors='red', linewidths=3, linestyles='--')
+        ax2.contour(X, Y, z_scores, levels=[3], colors='red', linewidths=3, linestyles='--')
     
     # Add mine features
-    ax2.plot(tailings_x, tailings_y, 'k^', markersize=15, 
-            markeredgecolor='white', markeredgewidth=2, label='Tailings Dam')
-    ax2.plot(waste_x, waste_y, 'ks', markersize=15,
-            markeredgecolor='white', markeredgewidth=2, label='Waste Dump')
-    ax2.plot(plant_x, plant_y, 'ko', markersize=15,
-            markeredgecolor='white', markeredgewidth=2, label='Processing Plant')
+        ax2.plot(tailings_x, tailings_y, 'k^', markersize=15, 
+                markeredgecolor='white', markeredgewidth=2, label='Tailings Dam')
+        ax2.plot(waste_x, waste_y, 'ks', markersize=15,
+                markeredgecolor='white', markeredgewidth=2, label='Waste Dump')
+        ax2.plot(plant_x, plant_y, 'ko', markersize=15,
+                markeredgecolor='white', markeredgewidth=2, label='Processing Plant')
     
-    apply_minimalist_style_manual(ax2)
-    ax2.set_xlabel('Easting (km)', fontsize=10)
-    ax2.set_ylabel('Northing (km)', fontsize=10)
-    ax2.set_title('Z-Score Anomaly Detection', 
-                  fontsize=12, fontweight='bold', loc='center', pad=15)
-    ax2.legend(loc='upper right', frameon=False, fontsize=8)
-    ax2.set_aspect('equal')
+        apply_minimalist_style_manual(ax2)
+        ax2.set_xlabel('Easting (km)', fontsize=10)
+        ax2.set_ylabel('Northing (km)', fontsize=10)
+        ax2.set_title('Z-Score Anomaly Detection', 
+                      fontsize=12, fontweight='bold', loc='center', pad=15)
+        ax2.legend(loc='upper right', frameon=False, fontsize=8)
+        ax2.set_aspect('equal')
     
-    cbar2 = plt.colorbar(im2, ax=ax2)
-    cbar2.set_label('Z-Score (σ)', fontsize=10)
-    cbar2.outline.set_visible(False)
+        cbar2 = plt.colorbar(im2, ax=ax2)
+        cbar2.set_label('Z-Score (σ)', fontsize=10)
+        cbar2.outline.set_visible(False)
     
-    plt.suptitle('Spatial Thermal Anomaly Analysis', 
-                fontsize=14, fontweight='bold', y=1.00)
+        plt.suptitle('Spatial Thermal Anomaly Analysis', 
+                    fontsize=14, fontweight='bold', y=1.00)
     
-    plt.tight_layout()
-    plt.savefig('/Users/k.jones/Desktop/blogs/blog_posts/16_thermal_anomaly_spatial.png', 
-                dpi=300, bbox_inches='tight')
-    plt.close()
+        plt.tight_layout()
+        plt.savefig('/Users/k.jones/Desktop/blogs/blog_posts/16_thermal_anomaly_spatial.png', 
+                    dpi=300, bbox_inches='tight')
+        plt.close()
     
     logger.info("✓ Spatial thermal heatmap visualization saved")
 
