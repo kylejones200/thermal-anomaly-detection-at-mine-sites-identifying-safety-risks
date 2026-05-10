@@ -1,51 +1,34 @@
+---
+author: "Kyle Jones"
+date_published: "October 7, 2025"
+date_exported_from_medium: "November 10, 2025"
+canonical_link: "https://medium.com/@kyle-t-jones/thermal-anomaly-detection-at-mine-sites-identifying-safety-risks-35d561499694"
+---
+
 # Thermal Anomaly Detection at Mine Sites: Identifying Safety Risks In 2014, the Mount Polley tailings dam failed in British Columbia. It
 released 25 million cubic meters of contaminated water. Investigators...
 
 ### Thermal Anomaly Detection at Mine Sites: Identifying Safety Risks
-In 2014, the Mount Polley tailings dam failed in British Columbia. It
-released 25 million cubic meters of contaminated water. Investigators
-found that thermal anomalies had been present for months before the
-breach. Surface temperature spikes --- caused by internal erosion and
-piping --- could have been detected from space using freely available
-satellite data. The miners who understand thermal monitoring gain a
-decisive edge in risk management, regulatory compliance, and operational
-safety.
+In 2014, the Mount Polley tailings dam failed in British Columbia. It released 25 million cubic meters of contaminated water. Investigators found that thermal anomalies had been present for months before the breach. Surface temperature spikes --- caused by internal erosion and piping --- could have been detected from space using freely available satellite data. The miners who understand thermal monitoring gain a decisive edge in risk management, regulatory compliance, and operational safety.
 
-Thermal anomaly detection isn't just about preventing disasters --- it's
-about understanding the hidden heat signatures that reveal oxidation in
-waste rock, spontaneous combustion risks in coal stockpiles, and
-processing inefficiencies that waste energy. Modern satellite technology
-provides continuous thermal monitoring across entire mining operations
-at resolutions sufficient to detect problems before they escalate.
+Thermal anomaly detection isn't just about preventing disasters --- it's about understanding the hidden heat signatures that reveal oxidation in waste rock, spontaneous combustion risks in coal stockpiles, and processing inefficiencies that waste energy. Modern satellite technology provides continuous thermal monitoring across entire mining operations at resolutions sufficient to detect problems before they escalate.
 
 ### Why Thermal Monitoring Matters for Mine Safety
-Every mining operation generates heat signatures that tell a story.
-Tailings dams that develop internal erosion show distinctive thermal
-patterns. Waste rock dumps experiencing acid rock drainage exhibit
-temperature elevations from exothermic oxidation reactions. Coal
-stockpiles prone to spontaneous combustion develop characteristic hot
-spots weeks before ignition.
+Every mining operation generates heat signatures that tell a story. Tailings dams that develop internal erosion show distinctive thermal patterns. Waste rock dumps experiencing acid rock drainage exhibit temperature elevations from exothermic oxidation reactions. Coal stockpiles prone to spontaneous combustion develop characteristic hot spots weeks before ignition.
 
 Professional mine operators use thermal monitoring to:
 
-- Identify geotechnical instabilities in tailings storage facilities
-  before failure
-- Detect acid rock drainage initiation in waste dumps, enabling early
-  intervention
-- Monitor spontaneous combustion risk in coal stockpiles and sulfide
-  ore piles
+- Identify geotechnical instabilities in tailings storage facilities before failure
+- Detect acid rock drainage initiation in waste dumps, enabling early intervention
+- Monitor spontaneous combustion risk in coal stockpiles and sulfide ore piles
 - Verify thermal efficiency of heap leach operations
-- Track environmental compliance through surface water temperature
-  monitoring
+- Track environmental compliance through surface water temperature monitoring
 
-The difference between detecting a thermal anomaly weeks early versus
-discovering it during an inspection can mean the difference between a
-controlled intervention and a catastrophic failure.
+The difference between detecting a thermal anomaly weeks early versus discovering it during an inspection can mean the difference between a controlled intervention and a catastrophic failure.
 
 
 ### Understanding Satellite Thermal Data
-Let's examine how MODIS (Moderate Resolution Imaging Spectroradiometer)
-provides the foundation for thermal monitoring:
+Let's examine how MODIS (Moderate Resolution Imaging Spectroradiometer) provides the foundation for thermal monitoring:
 
 ```python
 import numpy as np
@@ -124,17 +107,10 @@ print(f"Mean temperature: {thermal_data['lst_day_celsius'].mean():.1f}°C")
 # Mean temperature: 21.1°C
 ```
 
-This code establishes the foundation for thermal monitoring. MODIS
-provides 8-day composites --- sufficient temporal resolution to detect
-developing problems while filtering out transient cloud cover and
-atmospheric effects. The 1km spatial resolution captures tailings dams,
-large waste dumps, and processing facilities. The 92 observations over
-two years provide robust baseline statistics, with temperature range
-reflecting seasonal variation typical of Western Australian mine sites.
+This code establishes the foundation for thermal monitoring. MODIS provides 8-day composites --- sufficient temporal resolution to detect developing problems while filtering out transient cloud cover and atmospheric effects. The 1km spatial resolution captures tailings dams, large waste dumps, and processing facilities. The 92 observations over two years provide robust baseline statistics, with temperature range reflecting seasonal variation typical of Western Australian mine sites.
 
 ### Establishing Thermal Baselines
-Understanding normal temperature variation is critical for anomaly
-detection:
+Understanding normal temperature variation is critical for anomaly detection:
 
 ```python
 def calculate_thermal_baseline(thermal_data, baseline_period_days=730):
@@ -201,13 +177,7 @@ print(f"\nSeasonal variation range: {baseline['seasonal']['day_mean'].max() - ba
 # Seasonal variation range: 21.01°C
 ```
 
-Seasonal baselines account for natural temperature cycles. The 21°C
-seasonal variation range reflects the dramatic temperature differences
-between Australian winter and summer. The 95th percentile of 31.19°C
-establishes the upper bound of normal conditions --- temperatures
-exceeding this warrant investigation. The 6.52°C standard deviation
-quantifies typical day-to-day variation, forming the basis for z-score
-anomaly detection.
+Seasonal baselines account for natural temperature cycles. The 21°C seasonal variation range reflects the dramatic temperature differences between Australian winter and summer. The 95th percentile of 31.19°C establishes the upper bound of normal conditions --- temperatures exceeding this warrant investigation. The 6.52°C standard deviation quantifies typical day-to-day variation, forming the basis for z-score anomaly detection.
 
 ### Detecting Thermal Anomalies
 With baselines established, anomaly detection becomes systematic:
@@ -291,13 +261,7 @@ if anomaly_count > 0:
 #   Mean Temperature Deviation: 5.97 sigma
 ```
 
-The detection of 9 anomalies (9.8% of observations) with a maximum
-severity score of 100/100 confirms the system successfully identified
-the injected 8°C temperature elevation. The mean deviation of 5.97 sigma
-indicates these are genuine anomalies, far exceeding the 2.5 sigma
-detection threshold. In production, sustained anomalies over multiple
-8-day periods indicate persistent problems rather than transient weather
-effects.
+The detection of 9 anomalies (9.8% of observations) with a maximum severity score of 100/100 confirms the system successfully identified the injected 8°C temperature elevation. The mean deviation of 5.97 sigma indicates these are genuine anomalies, far exceeding the 2.5 sigma detection threshold. In production, sustained anomalies over multiple 8-day periods indicate persistent problems rather than transient weather effects.
 
 ### Spatial Analysis for Multiple Mine Features
 Professional operations monitor multiple features simultaneously:
@@ -421,17 +385,10 @@ for _, row in site_analysis.sort_values('max_anomaly_score', ascending=False).it
 #   Max Anomaly Score: 14.1/100
 ```
 
-This spatial analysis reveals patterns across mine features. The
-tailings dam shows slightly elevated temperatures (37.4°C max) compared
-to waste dumps (\~24°C), but all remain below the HIGH risk threshold.
-The Pythonic dictionary-based approach allows clean feature-type
-specific adjustments, replacing nested if/elif statements with
-maintainable lambda functions. This pattern scales efficiently to
-monitor dozens of features across multiple mine sites.
+This spatial analysis reveals patterns across mine features. The tailings dam shows slightly elevated temperatures (37.4°C max) compared to waste dumps (\~24°C), but all remain below the HIGH risk threshold. The Pythonic dictionary-based approach allows clean feature-type specific adjustments, replacing nested if/elif statements with maintainable lambda functions. This pattern scales efficiently to monitor dozens of features across multiple mine sites.
 
 ### Temporal Trend Analysis
-Understanding whether thermal conditions are improving or deteriorating
-guides response urgency:
+Understanding whether thermal conditions are improving or deteriorating guides response urgency:
 
 ```python
 def analyze_thermal_trends(thermal_data, baseline, window_days=90):
@@ -525,20 +482,11 @@ print(f"Deviation: {trend_analysis['deviation']:+.2f}°C")
 # Deviation: +0.54°C
 ```
 
-The Pythonic approach uses `pd.cut()` for
-binning trends into categories and dictionary mapping for urgency
-levels, eliminating nested if/elif statements. Note that the COOLING
-trend (-18°C/year) appears counterintuitive given the warming
-injection---this occurs because the synthetic data\'s random seed
-creates seasonal effects that dominate the short-term trend window. In
-production with real data, warming trends exceeding 2°C/year demand
-immediate investigation, indicating active processes like oxidation or
-internal erosion.
+The Pythonic approach uses `pd.cut()` for binning trends into categories and dictionary mapping for urgency levels, eliminating nested if/elif statements. Note that the COOLING trend (-18°C/year) appears counterintuitive given the warming injection---this occurs because the synthetic data\'s random seed creates seasonal effects that dominate the short-term trend window. In production with real data, warming trends exceeding 2°C/year demand immediate investigation, indicating active processes like oxidation or internal erosion.
 
 
 ### Integration with Ground-Based Monitoring
-Satellite thermal data works best when integrated with field
-measurements:
+Satellite thermal data works best when integrated with field measurements:
 
 ```python
 def correlate_satellite_ground(satellite_thermal, ground_measurements):
@@ -633,52 +581,19 @@ else:
 # Matched Observations: 92
 ```
 
-The high correlation (0.974) confirms satellite data accurately tracks
-ground temperature trends. The negative bias (-1.97°C) reflects that
-satellites measure surface skin temperature while ground sensors measure
-air temperature --- a systematic difference that's easily calibrated.
-The 2.54°C RMSE is acceptable for detecting 8--15°C thermal anomalies
-(3--6× larger than measurement error). The Pythonic improvements include
-explicit column selection in `pd.merge_asof()` to prevent column conflicts,
-`pd.crosstab()` for cleaner confusion
-matrices, and `max()` for safe division
-replacing ternary operators.
+The high correlation (0.974) confirms satellite data accurately tracks ground temperature trends. The negative bias (-1.97°C) reflects that satellites measure surface skin temperature while ground sensors measure air temperature --- a systematic difference that's easily calibrated. The 2.54°C RMSE is acceptable for detecting 8--15°C thermal anomalies (3--6× larger than measurement error). The Pythonic improvements include explicit column selection in `pd.merge_asof()` to prevent column conflicts, `pd.crosstab()` for cleaner confusion matrices, and `max()` for safe division replacing ternary operators.
 
 ### Key Takeaways for Mine Operators
-Thermal anomaly detection from satellite data provides continuous,
-objective monitoring across entire mining operations. The analysis
-presented here demonstrates several critical principles:
+Thermal anomaly detection from satellite data provides continuous, objective monitoring across entire mining operations. The analysis presented here demonstrates several critical principles:
 
-1\. Baseline Establishment Is Fundamental: Understanding normal seasonal
-temperature variation enables accurate anomaly detection. Multi-year
-baselines filter out weather-driven fluctuations.
+1\. Baseline Establishment Is Fundamental: Understanding normal seasonal temperature variation enables accurate anomaly detection. Multi-year baselines filter out weather-driven fluctuations.
 
-2\. Z-Score Thresholds Enable Objective Decisions: Statistical
-thresholds (2.5--3.0 sigma) translate temperatures into actionable risk
-levels, removing subjective interpretation.
+2\. Z-Score Thresholds Enable Objective Decisions: Statistical thresholds (2.5--3.0 sigma) translate temperatures into actionable risk levels, removing subjective interpretation.
 
-3\. Temporal Trends Reveal Urgency: Warming rates exceeding 2°C per year
-indicate active processes requiring immediate intervention, while stable
-deviations may reflect long-term conditions.
+3\. Temporal Trends Reveal Urgency: Warming rates exceeding 2°C per year indicate active processes requiring immediate intervention, while stable deviations may reflect long-term conditions.
 
-4\. Spatial Comparison Prioritizes Response: Comparing thermal patterns
-across multiple mine features identifies which areas demand immediate
-attention and which can be monitored routinely.
+4\. Spatial Comparison Prioritizes Response: Comparing thermal patterns across multiple mine features identifies which areas demand immediate attention and which can be monitored routinely.
 
-5\. Integration Strengthens Confidence: Combining satellite observations
-with ground sensors validates anomalies and builds confidence in remote
-monitoring systems.
+5\. Integration Strengthens Confidence: Combining satellite observations with ground sensors validates anomalies and builds confidence in remote monitoring systems.
 
-The code demonstrates how you can use MODIS data through NASA EARTHDATA.
-The actual results from the notebook (92 observations, 6.3--32.8°C
-range, 21.1°C mean, 97.4% correlation with ground sensors) demonstrate
-that this approach works with real-world data characteristics. Start
-with historical baseline establishment, add anomaly detection, implement
-trend analysis, and integrate with existing monitoring systems.
-::::::::By [Kyle Jones](https://medium.com/@kyle-t-jones) on
-[October 7, 2025](https://medium.com/p/35d561499694).
-
-[Canonical
-link](https://medium.com/@kyle-t-jones/thermal-anomaly-detection-at-mine-sites-identifying-safety-risks-35d561499694)
-
-Exported from [Medium](https://medium.com) on November 10, 2025.
+The code demonstrates how you can use MODIS data through NASA EARTHDATA. The actual results from the notebook (92 observations, 6.3--32.8°C range, 21.1°C mean, 97.4% correlation with ground sensors) demonstrate that this approach works with real-world data characteristics. Start with historical baseline establishment, add anomaly detection, implement trend analysis, and integrate with existing monitoring systems.
