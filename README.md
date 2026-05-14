@@ -1,7 +1,7 @@
 # Thermal Anomaly Detection at Mine Sites Identifying Safety Risks
 
-**Published:** 2025-10-07
-**Medium:** [https://medium.com/@kyle-t-jones/thermal-anomaly-detection-at-mine-sites-identifying-safety-risks-35d561499694](https://medium.com/@kyle-t-jones/thermal-anomaly-detection-at-mine-sites-identifying-safety-risks-35d561499694)
+Published: 2025-10-07
+Medium: [https://medium.com/@kyle-t-jones/thermal-anomaly-detection-at-mine-sites-identifying-safety-risks-35d561499694](https://medium.com/@kyle-t-jones/thermal-anomaly-detection-at-mine-sites-identifying-safety-risks-35d561499694)
 
 ## About
 

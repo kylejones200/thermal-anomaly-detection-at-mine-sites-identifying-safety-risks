@@ -14,20 +14,20 @@ MODIS (Moderate Resolution Imaging Spectroradiometer) aboard NASA's Terra and Aq
 
 ### Mine-Site Thermal Anomalies
 
-**Tailings Dam Oxidation:**
+Tailings Dam Oxidation:
 Sulfide-rich tailings undergo exothermic oxidation when exposed to air:
 ```
 4 FeS₂ + 15 O₂ + 14 H₂O → 4 Fe(OH)₃ + 8 H₂SO₄ + heat
 ```
 Temperatures can reach 60-80°C internally, with surface signatures of +5-15°C above ambient. MODIS detects these as persistent hot spots over months to years.
 
-**Waste Rock Spontaneous Combustion:**
+Waste Rock Spontaneous Combustion:
 Coal and sulfide-bearing waste rock can ignite spontaneously. The Centralia mine fire in Pennsylvania has burned since 1962, visible in every MODIS pass as a 10-20°C anomaly.
 
-**Heap Leach Pad Activity:**
+Heap Leach Pad Activity:
 Active cyanide heap leaching generates metabolic heat from microbial activity, raising surface temperatures 3-8°C. Inactive pads cool to ambient within 6 months—sudden cooling flags process failures.
 
-**Dam Seepage/Piping:**
+Dam Seepage/Piping:
 Internal erosion from seepage creates friction heat. Brumadinho showed +2-4°C anomalies in specific dam sections 3-6 months before failure. Small signal, but detectable against multi-year baseline.
 
 ## Architecture: Databricks Medallion for Satellite Rasters
@@ -52,7 +52,7 @@ MODIS MOD11A2 v6 provides 8-day LST composite at 1 km resolution. It delivers da
 
 ### Step 1: Initialize Sedona Environment
 
-**Output:**
+Output:
 ```
 ======================================================================
 THERMAL ANOMALY SUMMARY - 2023-03-17
@@ -94,7 +94,7 @@ Super Pit (Kalgoorlie) showing z=4.23 makes sense: Australia's largest open pit 
 
 ### Step 7: Time Series Analysis and Alerting
 
-**Output:**
+Output:
 ```
 ======================================================================
 TEMPORAL ANALYSIS: Super Pit (Kalgoorlie) (WA001)
@@ -136,14 +136,14 @@ You can use Delta Live Tables for incremental ETL, Unity Catalog for data lineag
 
 ---
 
-**Technology:** Databricks, Apache Sedona, PySpark, Delta Lake, Unity Catalog, Mosaic  
-**Data Sources:** MODIS MOD11A2 LST (NASA LP DAAC), Geoscience Australia mine boundaries  
-**Scale:** 2.6B pixel-observations, 50 mine sites, 2.4-minute spatial join  
-**Performance:** 250k pixels/composite, 8-day cadence, 1 km resolution  
-**Cost:** $0.02/km²/year satellite monitoring vs $50-200/km² aerial thermography  
-**Alert Criteria:** z > 3.0 sustained for >50% of observations = field inspection required
+Technology: Databricks, Apache Sedona, PySpark, Delta Lake, Unity Catalog, Mosaic  
+Data Sources: MODIS MOD11A2 LST (NASA LP DAAC), Geoscience Australia mine boundaries  
+Scale: 2.6B pixel-observations, 50 mine sites, 2.4-minute spatial join  
+Performance: 250k pixels/composite, 8-day cadence, 1 km resolution  
+Cost: $0.02/km²/year satellite monitoring vs $50-200/km² aerial thermography  
+Alert Criteria: z > 3.0 sustained for >50% of observations = field inspection required
 
-**Output:**
+Output:
 ```
 Apache Sedona Initialized:
   Spark version: 3.5.0
@@ -153,7 +153,7 @@ Apache Sedona Initialized:
 
 ### Step 2: Ingest MODIS LST Data (Bronze)
 
-**Output:**
+Output:
 ```
 Ingesting MODIS LST: 2021-2023
 
@@ -166,7 +166,7 @@ MODIS Bronze Table Created:
 
 ### Step 3: Load Mine Polygons (Silver)
 
-**Output:**
+Output:
 ```
 Mine Polygons Loaded:
   Total mines: 50
@@ -200,7 +200,7 @@ SELECT
 FROM catalog.mining.silver.pixel_baselines;
 ```
 
-**Output:**
+Output:
 ```
 total_pixels: 250,000
 avg_baseline_k: 298.2
@@ -263,7 +263,7 @@ SET anomaly_flag = CASE
 END;
 ```
 
-**Why ST_DWithin instead of ST_Intersects?**
+Why ST_DWithin instead of ST_Intersects?
 MODIS pixels at 1 km resolution may not perfectly align with mine polygon boundaries. ST_DWithin(0.01°) ≈ 1 km buffer captures pixels near the mine even if centroid is outside polygon.
 
 ### Step 6: Visualization and Alerting
