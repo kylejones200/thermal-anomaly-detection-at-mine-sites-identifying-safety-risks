@@ -186,9 +186,7 @@ def export_to_csv(data, filename):
 
 def main():
     """Execute thermal anomaly detection analysis."""
-    logger.info("=" * 70)
     logger.info("THERMAL ANOMALY DETECTION - PRODUCTION RUN")
-    logger.info("=" * 70)
     
     start_time = time.time()
     
@@ -260,14 +258,11 @@ def main():
     
     execution_time = time.time() - start_time
     
-    logger.info("\n" + "=" * 70)
-    logger.info("PERFORMANCE METRICS")
-    logger.info("=" * 70)
+    logger.info("=== PERFORMANCE METRICS ===")
     logger.info(f"Total Execution Time: {execution_time:.3f} seconds")
     logger.info(f"Observations Processed: {len(thermal_data) * len(mine_features)}")
     logger.info(f"Anomaly Detection Rate: {anomaly_pct:.2f}%")
     logger.info(f"Features at High Risk: {high_risk_count}/{len(mine_features)}")
-    logger.info("=" * 70)
 
 if __name__ == "__main__":
     main()

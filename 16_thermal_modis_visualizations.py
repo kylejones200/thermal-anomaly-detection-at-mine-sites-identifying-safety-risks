@@ -274,18 +274,14 @@ def create_spatial_thermal_heatmap(plot: bool = False):
 def main():
     """Generate all visualizations for Blog 16."""
     set_tufte_defaults()
-    logger.info("="*70)
     logger.info("Blog 16: Mine Thermal Anomaly (MODIS) - Visualizations")
-    logger.info("="*70)
     logger.info()
     
     create_main_thermal_time_series()
     create_spatial_thermal_heatmap()
     
     logger.info()
-    logger.info("="*70)
     logger.info("All visualizations generated successfully!")
-    logger.info("="*70)
     logger.info()
     logger.info("Files created:")
     logger.info("  - 16_thermal_anomaly_modis_main.png")
