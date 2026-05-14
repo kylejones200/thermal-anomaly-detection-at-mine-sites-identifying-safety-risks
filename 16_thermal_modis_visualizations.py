@@ -17,12 +17,10 @@ Creates minimalist-style visualizations for distributed thermal anomaly detectio
 import numpy as np
 import matplotlib.pyplot as plt
 from datetime import datetime, timedelta
-import warnings
 
 
 
 from pathlib import Path
-warnings.filterwarnings('ignore')
 
 def apply_minimalist_style_manual(ax):
     """Apply minimalist style components manually to axis."""
