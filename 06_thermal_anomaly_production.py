@@ -122,7 +122,7 @@ def analyze_mine_site_thermal(site_name, features_list):
                          'MEDIUM' if recent_anomalies['anomaly_score'].max() > 40 else 'LOW'
         }
         
-        all_results.append(feature_summary)
+        pd.concat([all_results, feature_summary])
     
     return pd.DataFrame(all_results)
 
