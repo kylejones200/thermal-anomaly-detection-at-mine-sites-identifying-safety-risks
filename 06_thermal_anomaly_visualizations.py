@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+import signalplot
 import sys
 import os
 
@@ -8,9 +9,6 @@ logging.basicConfig(
     format='%(asctime)s - %(levelname)s - %(message)s'
 )
 logger = logging.getLogger(__name__)
-# Add parent directory to path to import plot_style
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from plot_style import set_tufte_defaults, apply_tufte_style, save_tufte_figure, COLORS
 
 """
 Generate visualizations for Thermal Anomaly Detection blog post.
@@ -22,21 +20,8 @@ import pandas as pd
 from datetime import datetime, timedelta
 import matplotlib.pyplot as plt
 
-# Add parent directory to path to import plot_style
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-# Import Tufte plotting utilities
 from pathlib import Path
-sys.path.insert(0, str(Path(__file__).parent.parent))
-from tda_utils import setup_tufte_plot, TufteColors
-
-
-def save_fig(filename):
-    """Save plot in the standard minimalist format."""
-    plt.tight_layout()
-    plt.savefig(filename, dpi=300, bbox_inches="tight")
-    plt.close()
-
 def fetch_modis_lst_data(latitude, longitude, start_date, end_date):
     """Generate realistic MODIS LST data matching satellite characteristics."""
     dates = pd.date_range(start=start_date, end=end_date, freq='8D')
@@ -173,7 +158,7 @@ def create_main_visualization(plot: bool = False):
         ax2.set_ylim(0, 105)
     
     # Save
-        save_fig('06_thermal_anomaly_main.png')
+        signalplot.save('06_thermal_anomaly_main.png')
     logger.info("✓ Created: 06_thermal_anomaly_main.png")
 
 def create_trend_visualization(plot: bool = False):
@@ -247,17 +232,16 @@ def create_trend_visualization(plot: bool = False):
         ax2.set_ylabel('Temperature Deviation (°C)', fontsize=10)
     
     # Save
-        save_fig('06_thermal_anomaly_accuracy.png')
+        signalplot.save('06_thermal_anomaly_accuracy.png')
     logger.info("✓ Created: 06_thermal_anomaly_accuracy.png")
 
 def main():
     """Generate all visualizations."""
-    set_tufte_defaults()
+    signalplot.apply(font_family='serif')
     logger.info("THERMAL ANOMALY DETECTION - VISUALIZATION GENERATION")
     logger.info()
     
     # Set serif font globally
-    plt.rcParams['font.family'] = 'serif'
     
     logger.info("Creating visualizations...")
     create_main_visualization()
