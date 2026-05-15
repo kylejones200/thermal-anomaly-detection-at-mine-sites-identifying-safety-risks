@@ -1,6 +1,4 @@
 import signalplot
-import sys
-import os
 
 import logging
 logging.basicConfig(
@@ -20,7 +18,6 @@ from datetime import datetime, timedelta
 
 
 
-from pathlib import Path
 
 def apply_minimalist_style_manual(ax):
     """Apply minimalist style components manually to axis."""
@@ -116,9 +113,9 @@ def create_main_thermal_time_series(plot: bool = False):
         ax1.annotate('Spontaneous Combustion Event', 
                     xy=(dates[event_idx], tailings_c[event_idx]), 
                     xytext=(dates[event_idx + 50], tailings_c[event_idx] + 8),
-                    arrowprops=dict(arrowstyle='->', color='black', lw=1.5),
-                    fontsize=9, bbox=dict(boxstyle='round', facecolor='white', 
-                                         edgecolor='black', linewidth=1))
+                    arrowprops={'arrowstyle': '->', 'color': 'black', 'lw': 1.5},
+                    fontsize=9, bbox={'boxstyle': 'round', 'facecolor': 'white', 
+                                         'edgecolor': 'black', 'linewidth': 1})
     
     # Bottom panel: Z-score anomaly detection
         ax2.plot(dates, z_scores, 'o-', color='black', linewidth=1, 
@@ -150,7 +147,7 @@ def create_main_thermal_time_series(plot: bool = False):
                     dpi=300, bbox_inches='tight')
         plt.close()
     
-    logger.info(f"✓ Main thermal time series visualization saved")
+    logger.info("✓ Main thermal time series visualization saved")
     logger.info(f"  Anomalies detected: {len(anomaly_dates)}")
 
 def create_spatial_thermal_heatmap(plot: bool = False):

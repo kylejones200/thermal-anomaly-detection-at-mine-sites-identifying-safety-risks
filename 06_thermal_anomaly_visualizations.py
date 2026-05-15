@@ -1,7 +1,5 @@
 #!/usr/bin/env python3
 import signalplot
-import sys
-import os
 
 import logging
 logging.basicConfig(
@@ -17,11 +15,10 @@ Uses minimalist styling with serif fonts, clean axes, and high-quality output.
 
 import numpy as np
 import pandas as pd
-from datetime import datetime, timedelta
+from datetime import timedelta
 import matplotlib.pyplot as plt
 
 
-from pathlib import Path
 def fetch_modis_lst_data(latitude, longitude, start_date, end_date):
     """Generate realistic MODIS LST data matching satellite characteristics."""
     dates = pd.date_range(start=start_date, end=end_date, freq='8D')

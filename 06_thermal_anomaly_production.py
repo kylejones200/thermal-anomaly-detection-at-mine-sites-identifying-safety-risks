@@ -14,12 +14,10 @@ Includes baseline calculation, anomaly detection, and risk assessment.
 
 import numpy as np
 import pandas as pd
-from datetime import datetime, timedelta
+from datetime import timedelta
 import time
 import csv
 
-import sys
-from pathlib import Path
 def fetch_modis_lst_data(latitude, longitude, start_date, end_date):
     """Generate realistic MODIS LST data matching satellite characteristics."""
     dates = pd.date_range(start=start_date, end=end_date, freq='8D')
