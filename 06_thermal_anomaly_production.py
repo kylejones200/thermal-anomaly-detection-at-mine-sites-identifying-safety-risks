@@ -150,7 +150,7 @@ def analyze_mine_site_thermal(site_name, features_list):
             else "LOW",
         }
 
-        pd.concat([all_results, feature_summary])
+        all_results.append(feature_summary)
 
     return pd.DataFrame(all_results)
 
