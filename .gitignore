@@ -9,6 +9,14 @@ env/
 dist/
 build/
 .ipynb_checkpoints/
+.ruff_cache/
+.pytest_cache/
+
+# Generated outputs
+outputs/figures/*
+!outputs/figures/.gitkeep
+outputs/tables/*
+!outputs/tables/.gitkeep
 
 # Node
 node_modules/

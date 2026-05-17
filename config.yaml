@@ -1,0 +1,71 @@
+logging:
+  level: INFO
+
+random_seed: 42
+
+site:
+  name: Golden Grove Mine
+  latitude: -30.5
+  longitude: 121.5
+  start_date: "2022-01-01"
+  end_date: "2024-01-01"
+
+data:
+  modis_freq_days: 8
+  base_temp_kelvin: 295
+  seasonal_amplitude_k: 8
+  weather_noise_std_k: 3
+  day_night_delta_k: 12
+
+detection:
+  threshold_sigma: 2.5
+  recent_anomaly_days: 90
+  recent_analysis_days: 90
+  trend_window_days: 90
+  demo_injected_anomaly_celsius: 8
+  tailings_warming_start: "2023-06-01"
+  tailings_warming_rate_celsius: 6
+  tailings_warming_days: 180
+
+risk:
+  high_score: 60
+  medium_score: 40
+
+features:
+  - name: Main Tailings Dam
+    type: tailings_dam
+    lat: -30.50
+    lon: 121.50
+  - name: North Waste Dump
+    type: waste_dump
+    lat: -30.48
+    lon: 121.52
+  - name: South Waste Dump
+    type: waste_dump
+    lat: -30.52
+    lon: 121.48
+  - name: Processing Plant
+    type: facility
+    lat: -30.49
+    lon: 121.51
+  - name: Open Pit
+    type: pit
+    lat: -30.51
+    lon: 121.49
+
+output:
+  tables_dir: outputs/tables
+  figures_dir: outputs/figures
+  save_tables: true
+  save_figures: true
+  figure_dpi: 300
+  baseline_csv: thermal_baseline_data.csv
+  anomalies_csv: thermal_anomalies.csv
+  site_analysis_csv: mine_site_thermal_analysis.csv
+  blog06_main_figure: 06_thermal_anomaly_main.png
+  blog06_trend_figure: 06_thermal_anomaly_accuracy.png
+  blog16_timeseries_figure: 16_thermal_anomaly_modis_main.png
+  blog16_spatial_figure: 16_thermal_anomaly_spatial.png
+
+style:
+  font_family: serif
