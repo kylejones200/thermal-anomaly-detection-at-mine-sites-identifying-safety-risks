@@ -17,19 +17,15 @@ def analyze_mine_site_thermal(config: AppConfig) -> pd.DataFrame:
     """Analyze thermal patterns across multiple mine features."""
     all_results = []
     detection = config.detection
-
     for feature in config.features:
         thermal = fetch_site_thermal(config, feature.lat, feature.lon)
         thermal = apply_feature_thermal_effects(thermal, feature)
-
         baseline = calculate_thermal_baseline(thermal)
         anomalies = detect_thermal_anomalies(thermal, baseline, detection)
-
         recent_period = anomalies["date"] > (
             anomalies["date"].max() - timedelta(days=detection.recent_analysis_days)
         )
         recent_anomalies = anomalies[recent_period]
-
         max_score = recent_anomalies["anomaly_score"].max()
         all_results.append(
             {
@@ -50,22 +46,16 @@ def analyze_mine_site_thermal(config: AppConfig) -> pd.DataFrame:
     return pd.DataFrame(all_results)
 
 
-def analyze_thermal_trends(
-    thermal_data: pd.DataFrame, baseline: dict, window_days: int
-) -> dict:
+def analyze_thermal_trends(thermal_data: pd.DataFrame, baseline: dict, window_days: int) -> dict:
     """Analyze thermal trends to identify developing problems."""
     thermal_sorted = thermal_data.sort_values("date").copy()
     roll_window = max(window_days // 8, 1)
     thermal_sorted["rolling_mean"] = (
-        thermal_sorted["lst_day_celsius"]
-        .rolling(window=roll_window, min_periods=3)
-        .mean()
+        thermal_sorted["lst_day_celsius"].rolling(window=roll_window, min_periods=3).mean()
     )
-
     recent_6mo = thermal_sorted[
         thermal_sorted["date"] > (thermal_sorted["date"].max() - timedelta(days=180))
     ]
-
     if len(recent_6mo) >= 10:
         x = np.arange(len(recent_6mo))
         y = recent_6mo["lst_day_celsius"].values
@@ -82,7 +72,6 @@ def analyze_thermal_trends(
     recent_mean = recent_30d["lst_day_celsius"].mean()
     baseline_mean = baseline["overall"]["day_mean"]
     deviation_from_baseline = recent_mean - baseline_mean
-
     if annual_trend > 2:
         trend_status, urgency = "WARMING", "HIGH"
     elif annual_trend > 0.5:
@@ -117,9 +106,7 @@ def inject_tailings_warming(thermal: pd.DataFrame, config: AppConfig) -> pd.Data
     result = thermal.copy()
     detection = config.detection
     recent_mask = result["date"] > detection.tailings_warming_start
-    days_recent = (
-        result.loc[recent_mask, "date"] - result.loc[recent_mask, "date"].min()
-    ).dt.days
+    days_recent = (result.loc[recent_mask, "date"] - result.loc[recent_mask, "date"].min()).dt.days
     rate = detection.tailings_warming_rate_celsius / detection.tailings_warming_days
     result.loc[recent_mask, "lst_day_celsius"] += days_recent * rate
     return result

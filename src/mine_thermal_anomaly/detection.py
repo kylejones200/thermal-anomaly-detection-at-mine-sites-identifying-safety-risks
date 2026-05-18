@@ -16,24 +16,16 @@ def detect_thermal_anomalies(
     """Detect thermal anomalies using statistical thresholds."""
     result = thermal_data.copy()
     result["week_of_year"] = result["date"].dt.isocalendar().week
-
-    result = result.merge(
-        baseline["seasonal"], left_on="week_of_year", right_on="week", how="left"
-    )
-
-    result["day_z_score"] = (result["lst_day_celsius"] - result["day_mean"]) / result[
-        "day_std"
+    result = result.merge(baseline["seasonal"], left_on="week_of_year", right_on="week", how="left")
+    result["day_z_score"] = (result["lst_day_celsius"] - result["day_mean"]) / result["day_std"]
+    result["night_z_score"] = (result["lst_night_celsius"] - result["night_mean"]) / result[
+        "night_std"
     ]
-    result["night_z_score"] = (
-        result["lst_night_celsius"] - result["night_mean"]
-    ) / result["night_std"]
-
     threshold = detection.threshold_sigma
     result["day_anomaly"] = result["day_z_score"] > threshold
     result["night_anomaly"] = result["night_z_score"] > threshold
     result["any_anomaly"] = result["day_anomaly"] | result["night_anomaly"]
     result["anomaly_score"] = np.clip(result["day_z_score"] * 20, 0, 100)
-
     return result
 
 

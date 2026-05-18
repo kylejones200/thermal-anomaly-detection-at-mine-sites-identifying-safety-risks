@@ -26,7 +26,6 @@ def run_production(config: AppConfig) -> dict:
     start_time = time.time()
     site = config.site
     detection = config.detection
-
     logger.info("\n1. Fetching MODIS LST Data...")
     thermal_data = fetch_site_thermal(config, site.latitude, site.longitude)
     logger.info("   Collected %s observations", len(thermal_data))
@@ -35,13 +34,11 @@ def run_production(config: AppConfig) -> dict:
         thermal_data["lst_day_celsius"].min(),
         thermal_data["lst_day_celsius"].max(),
     )
-
     logger.info("\n2. Calculating Thermal Baseline...")
     baseline = calculate_thermal_baseline(thermal_data)
     logger.info("   Day Mean: %.2f°C", baseline["overall"]["day_mean"])
     logger.info("   Day Std Dev: %.2f°C", baseline["overall"]["day_std"])
     logger.info("   Day 95th Percentile: %.2f°C", baseline["overall"]["day_p95"])
-
     logger.info("\n3. Detecting Thermal Anomalies...")
     thermal_with_anomaly = inject_demo_anomaly(thermal_data, detection)
     anomalies = detect_thermal_anomalies(thermal_with_anomaly, baseline, detection)
@@ -52,7 +49,6 @@ def run_production(config: AppConfig) -> dict:
         "   Maximum Severity Score: %.1f/100",
         anomalies["anomaly_score"].max(),
     )
-
     logger.info("\n4. Analyzing Multiple Mine Features...")
     site_analysis = analyze_mine_site_thermal(config)
     high_risk_count = int((site_analysis["risk_level"] == "HIGH").sum())
@@ -60,7 +56,6 @@ def run_production(config: AppConfig) -> dict:
     logger.info("   Features Analyzed: %s", len(site_analysis))
     logger.info("   High Risk Features: %s", high_risk_count)
     logger.info("   Medium Risk Features: %s", medium_risk_count)
-
     logger.info("\n5. Analyzing Thermal Trends...")
     tailings = next(f for f in config.features if f.type == "tailings_dam")
     tailings_thermal = fetch_site_thermal(config, tailings.lat, tailings.lon)
@@ -75,7 +70,6 @@ def run_production(config: AppConfig) -> dict:
         "   Annual Trend: %+.2f°C/year",
         trend_analysis["annual_trend_celsius"],
     )
-
     logger.info("\n6. Exporting Results...")
     table_paths = export_tables(
         config,
@@ -99,7 +93,6 @@ def run_production(config: AppConfig) -> dict:
         high_risk_count,
         len(config.features),
     )
-
     return {
         "anomaly_pct": float(anomaly_pct),
         "high_risk_count": high_risk_count,

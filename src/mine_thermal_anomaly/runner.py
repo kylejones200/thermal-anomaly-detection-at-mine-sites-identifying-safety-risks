@@ -43,10 +43,8 @@ def _cmd_viz06(config_path: Path) -> int:
     _configure_logging(config.logging_level)
     np.random.seed(config.random_seed)
     signalplot.apply(font_family=config.font_family)
-
     logger = logging.getLogger(__name__)
     logger.info("THERMAL ANOMALY DETECTION - BLOG 06 FIGURES")
-
     paths = [
         create_main_visualization(config),
         create_trend_visualization(config),
@@ -64,10 +62,8 @@ def _cmd_viz16(config_path: Path) -> int:
     _configure_logging(config.logging_level)
     np.random.seed(config.random_seed)
     signalplot.apply(font_family=config.font_family)
-
     logger = logging.getLogger(__name__)
     logger.info("MINE THERMAL ANOMALY (MODIS) - BLOG 16 FIGURES")
-
     paths = [
         create_main_thermal_time_series(config),
         create_spatial_thermal_heatmap(config),
@@ -90,15 +86,11 @@ def main(argv: list[str] | None = None) -> int:
         default=DEFAULT_CONFIG_PATH,
         help="Path to config.yaml (default: repo config.yaml)",
     )
-
     subparsers = parser.add_subparsers(dest="command", required=True)
-
     subparsers.add_parser("run", help="Production pipeline: detect, assess, export CSVs")
     subparsers.add_parser("viz-06", help="Generate blog 06 article figures")
     subparsers.add_parser("viz-16", help="Generate blog 16 MODIS article figures")
-
     args = parser.parse_args(argv)
-
     if args.command == "run":
         return _cmd_run(args.config)
     if args.command == "viz-06":
@@ -107,7 +99,6 @@ def main(argv: list[str] | None = None) -> int:
         return _cmd_viz16(args.config)
 
     parser.error(f"unknown command: {args.command}")
-    return 1
 
 
 if __name__ == "__main__":

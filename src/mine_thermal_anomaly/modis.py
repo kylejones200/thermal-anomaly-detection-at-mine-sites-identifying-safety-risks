@@ -24,16 +24,12 @@ def fetch_modis_lst_data(
     """Generate realistic MODIS LST data matching satellite revisit characteristics."""
     freq = f"{freq_days or data.modis_freq_days}D"
     dates = pd.date_range(start=start_date, end=end_date, freq=freq)
-
     temperatures = []
     for date in dates:
         day_of_year = date.timetuple().tm_yday
-        seasonal = data.seasonal_amplitude_k * np.sin(
-            2 * np.pi * (day_of_year - 80) / 365
-        )
+        seasonal = data.seasonal_amplitude_k * np.sin(2 * np.pi * (day_of_year - 80) / 365)
         weather_noise = np.random.normal(0, data.weather_noise_std_k)
         temp_k = data.base_temp_kelvin + seasonal + weather_noise
-
         temperatures.append(
             {
                 "date": date,
@@ -66,15 +62,11 @@ def fetch_site_thermal(config: AppConfig, lat: float, lon: float) -> pd.DataFram
     return add_celsius_columns(frame)
 
 
-def apply_feature_thermal_effects(
-    thermal: pd.DataFrame, feature: FeatureConfig
-) -> pd.DataFrame:
+def apply_feature_thermal_effects(thermal: pd.DataFrame, feature: FeatureConfig) -> pd.DataFrame:
     """Inject feature-type thermal signatures for multi-site demos."""
     result = thermal.copy()
     if feature.type == "waste_dump":
-        result["lst_day_celsius"] = result["lst_day_celsius"] + np.random.normal(
-            3, 1, len(result)
-        )
+        result["lst_day_celsius"] = result["lst_day_celsius"] + np.random.normal(3, 1, len(result))
     elif feature.type == "tailings_dam":
         recent = result["date"] > "2023-10-01"
         result.loc[recent, "lst_day_celsius"] += np.random.normal(5, 2, recent.sum())

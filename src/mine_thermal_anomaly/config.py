@@ -101,7 +101,6 @@ def load_config(path: Path | None = None) -> AppConfig:
     risk_raw = _require(raw, "risk")
     output_raw = _require(raw, "output")
     style_raw = raw.get("style", {})
-
     features = tuple(
         FeatureConfig(
             name=str(_require(item, "name")),
@@ -111,7 +110,6 @@ def load_config(path: Path | None = None) -> AppConfig:
         )
         for item in _require(raw, "features")
     )
-
     return AppConfig(
         logging_level=raw.get("logging", {}).get("level", "INFO"),
         random_seed=int(raw.get("random_seed", 42)),
