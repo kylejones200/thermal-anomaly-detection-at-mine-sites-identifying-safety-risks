@@ -5,6 +5,14 @@ Medium: [Thermal Anomaly Detection at Mine Sites Identifying Safety Risks](https
 
 Companion code for the article (`article.md`). Demonstrates MODIS-style land-surface temperature monitoring, seasonal baselines, z-score anomaly detection, multi-feature risk scoring, and trend analysis at mine sites (synthetic data for reproducibility).
 
+## Business context
+
+In 2014, the Mount Polley tailings dam failed in British Columbia. It released 25 million cubic meters of contaminated water. Investigators found that thermal anomalies had been present for months before the breach. Surface temperature spikes --- caused by internal erosion and piping --- could have been detected from space using freely available satellite data. The miners who understand thermal monitoring gain a decisive edge in risk management, regulatory compliance, and operational safety.
+
+Thermal anomaly detection isn't just about preventing disasters --- it's about understanding the hidden heat signatures that reveal oxidation in waste rock, spontaneous combustion risks in coal stockpiles, and processing inefficiencies that waste energy. Modern satellite technology provides continuous thermal monitoring across entire mining operations at resolutions sufficient to detect problems before they escalate.
+
+Every mining operation generates heat signatures that tell a story. Tailings dams that develop internal erosion show distinctive thermal patterns. Waste rock dumps experiencing acid rock drainage exhibit temperature elevations from exothermic oxidation reactions. Coal stockpiles prone to spontaneous combustion develop characteristic hot spots weeks before ignition.
+
 ## Quick start
 
 Requires [uv](https://docs.astral.sh/uv/).
